@@ -27,7 +27,7 @@ static void ng_init_port(struct rte_mempool *mbuf_pool) {
 	}
 
 	struct rte_eth_dev_info dev_info;
-// #if 0
+#if 0
 	/** 循环获取网卡个数以及相应信息 */
 	int portid;
 	int ret;
@@ -52,7 +52,7 @@ static void ng_init_port(struct rte_mempool *mbuf_pool) {
 		rte_ether_format_addr(&mac[0], 18, &ports_eth_addr[portid]);
 		printf("port: %d->MAC-> %s\n", portid, mac);
 	}
-// #endif
+#endif
 	rte_eth_dev_info_get(gDpdkPortId, &dev_info); // 获取device info
 	
 	const int num_rx_queues = 1;
