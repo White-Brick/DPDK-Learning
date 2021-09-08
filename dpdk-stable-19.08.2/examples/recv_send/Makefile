@@ -5,7 +5,11 @@
 APP = dpdk_recv
 
 # all source are stored in SRCS-y
+<<<<<<< HEAD
+SRCS-y := recv.c
+=======
 SRCS-y := recv_send.c
+>>>>>>> 6f741d63bbfb924e09ec536ae52dc279c0d46f86
 
 # Build using pkg-config variables if possible
 ifeq ($(shell pkg-config --exists libdpdk && echo 0),0)
