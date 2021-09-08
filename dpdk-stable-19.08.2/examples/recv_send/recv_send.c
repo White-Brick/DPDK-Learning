@@ -199,29 +199,29 @@ int main(int argc, char *argv[]) {
 
 			struct rte_ipv4_hdr *ip_hdr = rte_pktmbuf_mtod_offset(mbufs[i], struct rte_ipv4_hdr *, sizeof(struct rte_ether_hdr));
 			if (ip_hdr->next_proto_id == IPPROTO_UDP) {
+                struct rte_udp_hdr *udp_hdr = (struct rte_udp_hdr *) ((unsigned char *) ip_hdr + sizeof(struct rte_ipv4_hdr));
+                if (UDP_PORT == ntohs(udp_hdr->src_port)) {
+                    printf("Received packet: ");
+    				
+    				uint16_t length = ntohs(udp_hdr->dgram_len);
+    				*((char *)udp_hdr + length) = '\0';
+    				
+                    struct in_addr addr;
+    				addr.s_addr = ip_hdr->src_addr;
+    				printf("kni_ingress src: %s:%d", inet_ntoa(addr), ntohs(udp_hdr->src_port));
 
-                printf("Received packet: ");
-				struct rte_udp_hdr *udp_hdr = (struct rte_udp_hdr *) ((unsigned char *) ip_hdr + sizeof(struct rte_ipv4_hdr));
-				
-				uint16_t length = ntohs(udp_hdr->dgram_len);
-				*((char *)udp_hdr + length) = '\0';
-				
-                struct in_addr addr;
-				addr.s_addr = ip_hdr->src_addr;
-				printf("kni_ingress src: %s:%d", inet_ntoa(addr), ntohs(udp_hdr->src_port));
+    				addr.s_addr = ip_hdr->dst_addr;
+                    printf(", dst: %s:%d --> length:%d, %s\n", inet_ntoa(addr), ntohs(udp_hdr->dst_port), length, (char *)(udp_hdr+1));
 
-				addr.s_addr = ip_hdr->dst_addr;
-                printf(", dst: %s:%d --> length:%d, %s\n", inet_ntoa(addr), ntohs(udp_hdr->dst_port), length, (char *)(udp_hdr+1));
-
-				if (UDP_PORT == ntohs(udp_hdr->src_port))
-					do_send(mbuf_pool, (unsigned char *)(udp_hdr+1), length-8);
-
-				rte_pktmbuf_free(mbufs[i]);
+    				if (UDP_PORT == ntohs(udp_hdr->src_port))
+    					do_send(mbuf_pool, (unsigned char *)(udp_hdr+1), length-8);
+                }
 			}
-
+            rte_pktmbuf_free(mbufs[i]);
 		}
 
     }
 
     return 0;
 }
+
