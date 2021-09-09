@@ -2,14 +2,10 @@
 # Copyright(c) 2010-2014 Intel Corporation
 
 # binary name
-APP = dpdk_recv
+APP = dpdk_recv_send
 
 # all source are stored in SRCS-y
-<<<<<<< HEAD
-SRCS-y := recv.c
-=======
-SRCS-y := recv_send.c
->>>>>>> 6f741d63bbfb924e09ec536ae52dc279c0d46f86
+SRCS-y := main.c
 
 # Build using pkg-config variables if possible
 ifeq ($(shell pkg-config --exists libdpdk && echo 0),0)
