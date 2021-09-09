@@ -322,7 +322,9 @@ main(int argc, char *argv[]) {
             // udp proto
             if (ipv4hdr->next_proto_id == IPPROTO_UDP) {
 //                 struct rte_udp_hdr *udphdr = (struct rte_udp_hdr *) ((unsigned char *) ipv4hdr + sizeof(struct rte_ipv4_hdr));
-                struct rte_udp_hdr *udphdr = rte_pktmbuf_mtod_offset(mbufs[i], struct rte_udp_hdr *, 
+                // *attention! to get the udphdr, offset the length of rte_ipv4_hdr+rte_ether_hdr
+				// not the rte_ipv4_hdr
+				struct rte_udp_hdr *udphdr = rte_pktmbuf_mtod_offset(mbufs[i], struct rte_udp_hdr *, 
                     sizeof(struct rte_ipv4_hdr) + sizeof(struct rte_ether_hdr));
 
                 if (UDP_PORT == ntohs(udphdr->src_port)) {
